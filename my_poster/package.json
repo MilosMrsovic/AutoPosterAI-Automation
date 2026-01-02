@@ -1,0 +1,30 @@
+{
+  "name": "moj_poster",
+  "version": "1.0.0",
+  "description": "AI Poster Generator - Automatski generiše postere sa AI tekstom",
+  "main": "api.py",
+  "scripts": {
+    "start": "python api.py",
+    "api": "python api.py",
+    "test": "python test_api.py",
+    "generate": "node -e \"const { generatePoster } = require('./generator.js'); generatePoster('Test poruka');\"",
+    "screenshot": "node test.js"
+  },
+  "keywords": [
+    "poster",
+    "ai",
+    "generator",
+    "automation",
+    "puppeteer"
+  ],
+  "author": "Milos Mrsovic",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "puppeteer": "^24.33.1"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}

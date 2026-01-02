@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<title>HEAQ Daily Signal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --primary: #FF6B6B;
+  --secondary: #4ECDC4;
+  --bg: #f4f6fb;
+  --text: #151515;
+  --muted: #6f7682;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: linear-gradient(145deg, #f4f6fb, #e2e9f5);
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.poster {
+  width: 1080px;
+  height: 1350px;
+  padding: 80px;
+  position: relative;
+  overflow: hidden;
+  color: var(--text);
+  background: #ffffff;
+  border-radius: 22px;
+}
+
+.poster::before {
+  content: "";
+  position: absolute;
+  width: 900px;
+  height: 900px;
+  top: -260px;
+  right: -260px;
+  background: radial-gradient(circle, var(--primary), transparent 72%);
+  opacity: 0.14;
+}
+
+.poster::after {
+  content: "";
+  position: absolute;
+  width: 2000px;
+  height: 2000px;
+  top: -900px;
+  left: -900px;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(78,204,196,0.06) 0 14px,
+    transparent 14px 28px
+  );
+  opacity: 0.6;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  position: relative;
+  z-index: 2;
+}
+
+.logo {
+  width: 82px;
+  height: 82px;
+  border-radius: 20px;
+  background: #ffffff;
+  padding: 10px;
+  object-fit: contain;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.1);
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: -0.6px;
+}
+
+.brand span {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--secondary);
+}
+
+.content {
+  margin-top: 120px;
+  max-width: 900px;
+  position: relative;
+  z-index: 2;
+}
+
+.title {
+  font-size: 74px;
+  font-weight: 900;
+  line-height: 1.06;
+  letter-spacing: -1.6px;
+  margin-bottom: 36px;
+}
+
+.body {
+  font-size: 28px;
+  line-height: 1.55;
+  color: #2b2f36;
+}
+
+.body p {
+  margin: 0 0 22px 0;
+}
+
+.hashtags {
+  margin-top: 56px;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.footer {
+  position: absolute;
+  bottom: 64px;
+  left: 80px;
+  right: 80px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--muted);
+}
+</style>
+</head>
+
+<body>
+<div class="poster">
+
+  <div class="header">
+    <img id="logoImage" class="logo">
+    <div class="brand">
+      <h1 id="companyName"></h1>
+      <span id="slogan"></span>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="title" id="messageTitle"></div>
+    <div class="body" id="messageBody"></div>
+    <div class="hashtags" id="hashtagsText"></div>
+  </div>
+
+  <div class="footer">
+    <div id="contactText"></div>
+    <div id="dateText"></div>
+  </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const CONFIG = {
+    primary_color: "#FF6B6B",
+    secondary_color: "#4ECDC4",
+    logo_base64: "",
+    company_name: "HEAQ Digital Automation",
+    slogan: "Innovation & Automation",
+    contact: "***",
+    date: "26.12.2025",
+    ai_text: `Transform Your Business with Automation
+
+Ready to ditch manual processes and take control of your workflow? Our Business Process Automation solutions help eliminate friction, reduce costs, and unlock scale.
+
+From automated data flows to intelligent systems, we build solutions that work while you focus on growth.
+
+#BusinessProcessAutomation #DigitalTransformation #AutomationStrategy #ScaleSmarter #HEAQ`
+  };
+
+  document.documentElement.style.setProperty('--primary', CONFIG.primary_color);
+  document.documentElement.style.setProperty('--secondary', CONFIG.secondary_color);
+
+  companyName.textContent = CONFIG.company_name;
+  slogan.textContent = CONFIG.slogan;
+  contactText.textContent = CONFIG.contact;
+  dateText.textContent = CONFIG.date;
+
+  if (CONFIG.logo_base64) logoImage.src = CONFIG.logo_base64;
+
+  const blocks = CONFIG.ai_text.split("\n\n").map(b => b.trim()).filter(Boolean);
+
+  messageTitle.textContent = blocks[0];
+  messageBody.innerHTML = blocks.slice(1).filter(b => !b.startsWith("#")).map(p => `<p>${p}</p>`).join("");
+  hashtagsText.textContent = blocks.filter(b => b.startsWith("#")).join(" ");
+
+});
+</script>
+
+</body>
+</html>

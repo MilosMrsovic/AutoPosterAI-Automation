@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<title>HEAQ Daily Signal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #0976EA;
+  --secondary: #00F08E;
+  --text: #ffffff;
+  --muted: rgba(255,255,255,0.75);
+}
+
+* { box-sizing: border-box; margin:0; padding:0; }
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  background: #0e0f1a;
+}
+
+.poster {
+  position: relative;
+  width: 1080px;
+  height: 1350px;
+  padding: 90px 90px 80px;
+  overflow: hidden;
+  color: var(--text);
+  background: linear-gradient(135deg, #0b5cff 0%, #00f08e 100%);
+}
+
+.poster::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(255,255,255,0.18), transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(0,0,0,0.25), transparent 45%);
+  z-index: 0;
+}
+
+.poster::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    135deg,
+    rgba(255,255,255,0.04) 0 40px,
+    transparent 40px 80px
+  );
+  z-index: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  position: relative;
+  z-index: 2;
+}
+
+.logo {
+  width: 84px;
+  height: 84px;
+  border-radius: 18px;
+  background: white;
+  padding: 10px;
+  object-fit: contain;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+}
+
+.brand h1 {
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: -0.6px;
+}
+
+.brand span {
+  display: block;
+  margin-top: 4px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--secondary);
+}
+
+.content {
+  margin-top: 140px;
+  max-width: 900px;
+  position: relative;
+  z-index: 2;
+}
+
+.title {
+  font-size: 76px;
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -1.6px;
+  margin-bottom: 36px;
+}
+
+.body {
+  font-size: 28px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.body p {
+  margin-bottom: 26px;
+}
+
+.body p:last-child {
+  margin-bottom: 0;
+}
+
+.hashtags {
+  margin-top: 56px;
+  font-size: 19px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.9);
+}
+
+.footer {
+  position: absolute;
+  bottom: 70px;
+  left: 90px;
+  right: 90px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.65);
+  z-index: 2;
+}
+</style>
+</head>
+<body>
+
+<div class="poster">
+  <div class="header">
+    <img id="logoImage" class="logo">
+    <div class="brand">
+      <h1 id="companyName"></h1>
+      <span id="slogan"></span>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="title" id="titleText"></div>
+    <div class="body" id="bodyText"></div>
+    <div class="hashtags" id="hashtagsText"></div>
+  </div>
+
+  <div class="footer">
+    <div id="contactText"></div>
+    <div id="dateText"></div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const CONFIG = {
+    primary_color: "#0976EA",
+    secondary_color: "#00F08E",
+    company_name: "HEAQ Digital Automation",
+    slogan: "Innovation & Automation",
+    contact: "***",
+    date: "26.12.2025",
+    logo_base64: "",
+    ai_text: `Automate Tedious Tasks
+
+We all hate wasting time on manual data entry. It's a drain on productivity and leaves you with more paperwork than progress.
+
+Automated systems can handle:
+• Data imports from external sources
+• Live dashboards and reports
+• Smart reminders and alerts
+
+Free up hours every week and let your team focus on growth, not busywork.
+
+#BusinessProcessAutomation #EfficiencyBoost #Automation`
+  };
+
+  document.documentElement.style.setProperty('--primary', CONFIG.primary_color);
+  document.documentElement.style.setProperty('--secondary', CONFIG.secondary_color);
+
+  document.getElementById("companyName").textContent = CONFIG.company_name;
+  document.getElementById("slogan").textContent = CONFIG.slogan;
+  document.getElementById("contactText").textContent = CONFIG.contact;
+  document.getElementById("dateText").textContent = CONFIG.date;
+
+  if (CONFIG.logo_base64.startsWith("data:image")) {
+    document.getElementById("logoImage").src = CONFIG.logo_base64;
+  }
+
+  const blocks = CONFIG.ai_text.split("\n\n").map(b => b.trim()).filter(Boolean);
+  document.getElementById("titleText").textContent = blocks[0];
+  document.getElementById("bodyText").innerHTML = blocks.slice(1, -1).map(p => `<p>${p}</p>`).join("");
+  document.getElementById("hashtagsText").textContent = blocks[blocks.length - 1];
+});
+</script>
+
+</body>
+</html>

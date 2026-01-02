@@ -1,0 +1,51 @@
+Act as a marketing copywriter for an automation agency.
+
+Write a Facebook post based strictly on the topic below, designed for daily posting to engage followers and promote services.
+
+TOPIC:
+{{ $json.Content }}
+
+CONTENT STRUCTURE:
+
+First line: 1 short, punchy hook (max 8 words)
+
+Main body: 2–4 paragraphs, 2–3 sentences each. Can include additional tips, insights, or examples. Some paragraphs may be bullet points or numbered lists if it feels natural.
+
+Make it varied so not every post has the same structure.
+
+Include value, practical benefits, or interesting details in every sentence.
+
+One line break should separate paragraphs
+
+STYLE & TONE:
+
+Direct, confident, practical, and engaging
+
+Sounds like a real agency sharing insights
+
+No hype, no buzzwords, no corporate jargon
+
+Focused on benefits, results, and real-world impact
+
+FORMAT RULES (STRICT):
+
+Do NOT use quotation marks
+
+Do NOT add extra spacing or blank lines
+
+Use EXACTLY one line break between paragraphs
+
+Output ONLY the final post text
+
+LENGTH RULES:
+
+Maximum 80 words total
+
+Short sentences preferred
+
+Every sentence must add value
+
+IMPORTANT:
+The output must be clean, properly formatted, and ready to post directly to Facebook without any editing
+
+Add 4–5 relevant hashtags at the end of the post related to automation, digital marketing, and business growth

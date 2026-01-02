@@ -1,0 +1,668 @@
+{
+  "name": "Auto Poster Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a13f1081-4862-4ae7-907f-8eccd3542fd1",
+              "leftValue": "={{ $json.Day }}",
+              "rightValue": "={{ $json.Day }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        800,
+        144
+      ],
+      "id": "3e929d6b-ff22-4c29-ad11-d94a04f41936",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Act as a marketing copywriter for an automation agency.\n\nWrite a Facebook post based strictly on the topic below, designed for daily posting to engage followers and promote services.\n\nTOPIC:\n{{ $json.Content }}\n\nCONTENT STRUCTURE:\n\nFirst line: 1 short, punchy hook (max 8 words)\n\nMain body: 2–4 paragraphs, 2–3 sentences each. Can include additional tips, insights, or examples. Some paragraphs may be bullet points or numbered lists if it feels natural.\n\nMake it varied so not every post has the same structure.\n\nInclude value, practical benefits, or interesting details in every sentence.\n\nOne line break should separate paragraphs\n\nSTYLE & TONE:\n\nDirect, confident, practical, and engaging\n\nSounds like a real agency sharing insights\n\nNo hype, no buzzwords, no corporate jargon\n\nFocused on benefits, results, and real-world impact\n\nFORMAT RULES (STRICT):\n\nDo NOT use quotation marks\n\nDo NOT add extra spacing or blank lines\n\nUse EXACTLY one line break between paragraphs\n\nOutput ONLY the final post text\n\nLENGTH RULES:\n\nMaximum 80 words total\n\nShort sentences preferred\n\nEvery sentence must add value\n\nIMPORTANT:\nThe output must be clean, properly formatted, and ready to post directly to Facebook without any editing\n\nAdd 4–5 relevant hashtags at the end of the post related to automation, digital marketing, and business growth",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1088,
+        0
+      ],
+      "id": "8fcd2ddb-3b92-41f3-a9cd-2346b99ce8ab",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama3.1:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        1024,
+        144
+      ],
+      "id": "548f15e8-b0b1-4da0-8599-c9a2541c5d1c",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "***",
+          "name": "Ollama account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "data"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1168,
+        144
+      ],
+      "id": "6c85b59b-cc82-4af2-9d6d-fdeb0861ff8b",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8085/generate-poster",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"ai_text\": \"{{ $json.ai_text }}\",\n  \"overwrite\": true\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1568,
+        0
+      ],
+      "id": "0d8818fd-437a-4cb9-9618-5154280d88ac",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "sendTo": "***",
+        "subject": "=There is no content for today [{{ $('Date & Time1').item.json.formattedDate }}]",
+        "emailType": "text",
+        "message": "=Hello Team,\n\nThere is no content scheduled for today. Please check the sheet for upcoming dates.\n\nDate checked: {{ $('Date & Time1').item.json.formattedDate }}\n\nBest regards,",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1088,
+        288
+      ],
+      "id": "8d9ca1eb-020d-4288-afc8-ea42692d6922",
+      "name": "Send a message",
+      "webhookId": "d3a1e051-575f-45a3-8a8d-e793f46772d9",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "***",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "***",
+          "mode": "list",
+          "cachedResultName": "Weekly poster plan",
+          "cachedResultUrl": "***"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "***"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $('If').item.json.row_number }}",
+            "Posted": "=Posted"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Day",
+              "displayName": "Day",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Content",
+              "displayName": "Content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Posted",
+              "displayName": "Posted",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1920,
+        0
+      ],
+      "id": "5fea513a-fc68-4a65-8f84-15d7737f04ee",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "***",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8085/post-to-facebook",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1744,
+        0
+      ],
+      "id": "b7c7325f-0409-4e45-a7c8-aabe2e47c8a3",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawText = $input.item.json.output;\n\nconst safeText = rawText\n  .replace(/\\\\/g, '\\\\\\\\')   // backslash\n  .replace(/\"/g, '\\\\\"')    // double quotes\n  .replace(/\\r/g, '\\\\r')   // carriage return\n  .replace(/\\n/g, '\\\\n');  // newline\n\nreturn {\n  ai_text: safeText\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1392,
+        0
+      ],
+      "id": "0fe6bcc8-8e86-48c9-8b0c-f346f5a7b662",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 17
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        144
+      ],
+      "id": "307eaf54-f0a4-43ea-a3a0-de7b4aa35705",
+      "name": "Schedule Trigger1"
+    },
+    {
+      "parameters": {
+        "operation": "formatDate",
+        "date": "={{ $json.timestamp }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        416,
+        144
+      ],
+      "id": "af910cca-7704-4dc5-8faf-196faabe6c61",
+      "name": "Date & Time1"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "***",
+          "mode": "list",
+          "cachedResultName": "Weekly poster plan",
+          "cachedResultUrl": "***"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "***"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Day",
+              "lookupValue": "={{ $json.formattedDate }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        608,
+        144
+      ],
+      "id": "c0caa782-ebbb-4607-bb74-a57623cb851c",
+      "name": "Get row(s) in sheet1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "***",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "***",
+          "mode": "list",
+          "cachedResultName": "Inventory Data",
+          "cachedResultUrl": "***"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1184053928,
+          "mode": "list",
+          "cachedResultName": "Log sheet",
+          "cachedResultUrl": "***"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "timestamp": "={{ $json.formattedDate }}",
+            "nodeName": "={{ $('Edit Fields1').item.json.nodeName }}",
+            "errorMessage": "={{ $('Edit Fields1').item.json.errorMessage }}",
+            "workflowName": "={{ $('Edit Fields1').item.json.workflowName }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "nodeName",
+              "displayName": "nodeName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "errorMessage",
+              "displayName": "errorMessage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "workflowName",
+              "displayName": "workflowName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        992,
+        544
+      ],
+      "id": "f3559c75-befa-4ecf-bffa-a0bcddc952f2",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "***",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "formatDate",
+        "date": "={{ $json.timestamp }}",
+        "format": "custom",
+        "customFormat": "MMM dd, yyyy HH:mm:ss",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        800,
+        544
+      ],
+      "id": "6e02721f-7512-447e-a748-bc571b14cd54",
+      "name": "Date & Time"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\n\nconsole.log('Original timestamp:', item.timestamp);\n\nitem.timestamp = item.timestamp.split('+')[0];\n\nconsole.log('Clean timestamp:', item.timestamp);\n\nreturn [{ json: item }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        608,
+        544
+      ],
+      "id": "f6ce8ff1-a305-4f79-ab4f-42065f3a8a0b",
+      "name": "Code1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        224,
+        544
+      ],
+      "id": "0ecb1edb-757c-4b6b-a385-c20611a3854b",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "sendTo": "***",
+        "subject": "Error in stock Autoamtion workflow",
+        "message": "=HI Milose, there is an error in {{ $json.workflowName }}.<br><br>\n\nPlease check the {{ $json.nodeName }} in {{ $json.workflowName }} and see the message below.<br><br>\n\nMessage from bot:<br>\n{{ $json.errorMessage }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1184,
+        544
+      ],
+      "id": "c463cbf9-2fae-4b09-94b7-574710a9ee5e",
+      "name": "Send a message2",
+      "webhookId": "6079d60b-5739-4a13-b585-d51d36ac26c8",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "***",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"timestamp\": {{ $now }},\n  \"nodeName\": \"{{ $json.execution.lastNodeExecuted }}\",\n  \"errorMessage\": \"{{ $json.execution.error.message }}\",\n  \"workflowName\": \"{{ $json.workflow.name }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        544
+      ],
+      "id": "17da7432-ad53-4b92-8cab-2b1689ee0ccd",
+      "name": "Edit Fields1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "If": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Date & Time1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date & Time1": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date & Time": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Date & Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "596d18fb-a6b9-4cbc-a950-7081f1951a0e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "***"
+  },
+  "id": "***",
+  "tags": []
+}

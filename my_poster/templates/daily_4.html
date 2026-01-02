@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<title>HEAQ Daily Signal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #ff6f61;
+  --secondary: #6b5b95;
+  --bg: #0b0c2a;
+  --text: #ffffff;
+  --muted: #9fa3bf;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0b0c2a, #1f1f3d);
+}
+
+.poster {
+  width: 1080px;
+  height: 1350px;
+  padding: 80px;
+  position: relative;
+  overflow: hidden;
+  color: var(--text);
+}
+
+.background-curves {
+  position: absolute;
+  width: 160%;
+  height: 160%;
+  top: -30%;
+  left: -30%;
+  background:
+    radial-gradient(circle at 30% 30%, var(--primary) 14%, transparent 15%),
+    radial-gradient(circle at 70% 70%, var(--secondary) 18%, transparent 19%);
+  opacity: 0.18;
+  transform: rotate(-28deg);
+  z-index: 1;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  z-index: 2;
+  position: relative;
+}
+
+.logo {
+  width: 82px;
+  height: 82px;
+  border-radius: 20px;
+  background: #ffffff;
+  padding: 10px;
+  object-fit: contain;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: -0.6px;
+}
+
+.brand span {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--secondary);
+}
+
+.content {
+  margin-top: 120px;
+  max-width: 900px;
+  z-index: 2;
+  position: relative;
+}
+
+.title {
+  font-size: 74px;
+  font-weight: 900;
+  line-height: 1.06;
+  letter-spacing: -1.6px;
+  margin-bottom: 36px;
+}
+
+.body {
+  font-size: 28px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.body p {
+  margin: 0 0 24px 0;
+}
+
+.hashtags {
+  margin-top: 56px;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.footer {
+  position: absolute;
+  bottom: 64px;
+  left: 80px;
+  right: 80px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--muted);
+}
+</style>
+</head>
+
+<body>
+<div class="poster">
+  <div class="background-curves"></div>
+
+  <div class="header">
+    <img id="logoImage" class="logo">
+    <div class="brand">
+      <h1 id="companyName"></h1>
+      <span id="slogan"></span>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="title" id="messageTitle"></div>
+    <div class="body" id="messageBody"></div>
+    <div class="hashtags" id="hashtagsText"></div>
+  </div>
+
+  <div class="footer">
+    <div id="contactText"></div>
+    <div id="dateText"></div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const CONFIG = {
+    primary_color: "#ff6f61",
+    secondary_color: "#6b5b95",
+    logo_base64: "",
+    company_name: "HEAQ Digital Automation",
+    slogan: "Innovation & Automation",
+    contact: "***",
+    date: "***",
+    ai_text: `Transform Your Business with Automation
+
+Ready to ditch manual processes and take control of your workflow? Our Business Process Automation solutions eliminate friction and unlock scalable growth.
+
+We design systems that work quietly in the background while your team focuses on strategy and results.
+
+#BusinessProcessAutomation #DigitalTransformation #AutomationStrategy #ScaleSmarter #HEAQ`
+  };
+
+  document.documentElement.style.setProperty('--primary', CONFIG.primary_color);
+  document.documentElement.style.setProperty('--secondary', CONFIG.secondary_color);
+
+  companyName.textContent = CONFIG.company_name;
+  slogan.textContent = CONFIG.slogan;
+  contactText.textContent = CONFIG.contact;
+  dateText.textContent = CONFIG.date;
+
+  if (CONFIG.logo_base64) logoImage.src = CONFIG.logo_base64;
+
+  const blocks = CONFIG.ai_text.split("\n\n").map(b => b.trim()).filter(Boolean);
+
+  messageTitle.textContent = blocks[0];
+  messageBody.innerHTML = blocks.slice(1).filter(b => !b.startsWith("#")).map(p => `<p>${p}</p>`).join("");
+  hashtagsText.textContent = blocks.filter(b => b.startsWith("#")).join(" ");
+});
+</script>
+
+</body>
+</html>

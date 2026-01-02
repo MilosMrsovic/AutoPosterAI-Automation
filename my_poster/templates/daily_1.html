@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<title>HEAQ Automation Poster</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --primary: #0976EA;
+  --secondary: #00F08E;
+  --bg: #050812;
+  --text: #ffffff;
+  --muted: #9aa4c7;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #10173a, #050812);
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.poster {
+  width: 1080px;
+  height: 1350px;
+  padding: 70px 80px;
+  position: relative;
+  color: var(--text);
+  overflow: hidden;
+}
+
+.poster::before {
+  content: "";
+  position: absolute;
+  width: 800px;
+  height: 800px;
+  top: -350px;
+  right: -350px;
+  background: radial-gradient(circle, var(--primary), transparent 70%);
+  opacity: 0.2;
+}
+
+.poster::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  z-index: 2;
+  position: relative;
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 18px;
+  background: white;
+  padding: 8px;
+  object-fit: contain;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+}
+
+.brand span {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--secondary);
+}
+
+.content {
+  margin-top: 110px;
+  max-width: 880px;
+  z-index: 2;
+  position: relative;
+}
+
+.title {
+  font-size: 72px;
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: -1.5px;
+  margin-bottom: 30px;
+}
+
+.body {
+  font-size: 28px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.body p {
+  margin: 0 0 22px 0;
+}
+
+.hashtags {
+  margin-top: 50px;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.footer {
+  position: absolute;
+  bottom: 60px;
+  left: 80px;
+  right: 80px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  color: var(--muted);
+}
+</style>
+</head>
+
+<body>
+<div class="poster">
+
+  <div class="header">
+    <img id="logoImage" class="logo">
+    <div class="brand">
+      <h1 id="companyName"></h1>
+      <span id="slogan"></span>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="title" id="titleText"></div>
+    <div class="body" id="bodyText"></div>
+    <div class="hashtags" id="hashtagsText"></div>
+  </div>
+
+  <div class="footer">
+    <div id="contactText"></div>
+    <div id="dateText"></div>
+  </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const CONFIG = {
+    primary_color: "#0976EA",
+    secondary_color: "#00F08E",
+    logo_base64: "",
+    company_name: "HEAQ Digital Automation",
+    slogan: "Innovation & Automation",
+    contact: "***",
+    date: "26.12.2025",
+    ai_text: `Stop Running Your Business Manually
+
+Manual processes slow teams down, create errors, and quietly drain profit. Automation replaces repetitive work with reliable systems that operate 24/7.
+
+We design custom automation solutions for lead management, follow-ups, reporting, and internal workflows—built specifically around how your business operates.
+
+The outcome is simple: faster execution, lower operational costs, and complete visibility over your processes.
+
+#BusinessProcessAutomation #DigitalAutomation #SmartSystems #WorkflowOptimization #ScaleWithAutomation`
+  };
+
+  document.documentElement.style.setProperty('--primary', CONFIG.primary_color);
+  document.documentElement.style.setProperty('--secondary', CONFIG.secondary_color);
+
+  companyName.textContent = CONFIG.company_name;
+  slogan.textContent = CONFIG.slogan;
+  contactText.textContent = CONFIG.contact;
+  dateText.textContent = CONFIG.date;
+
+  if (CONFIG.logo_base64) logoImage.src = CONFIG.logo_base64;
+
+  const blocks = CONFIG.ai_text.split("\n\n").map(b => b.trim()).filter(Boolean);
+
+  const title = blocks[0];
+  const bodyBlocks = blocks.filter(b => !b.startsWith("#")).slice(1);
+  const hashtags = blocks.filter(b => b.startsWith("#")).join(" ");
+
+  titleText.textContent = title;
+  bodyText.innerHTML = bodyBlocks.map(p => `<p>${p}</p>`).join("");
+  hashtagsText.textContent = hashtags;
+
+});
+</script>
+
+</body>
+</html>
