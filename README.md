@@ -1,5 +1,7 @@
 # AI-Powered Facebook Poster Automation System
 
+Built by [Heaq Digital](https://heaqdigital.com), an automation studio for US service businesses. Full write-up: All projects https://heaqdigital.com/projects
+
 This project is a fully automated system for publishing Facebook posts on a daily schedule.  
 Content is planned in advance in **Google Sheets**, while the system handles everything else — from content generation to visual creation and publishing.
 
